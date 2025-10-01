@@ -16,8 +16,9 @@ dependencies = [
     "pandas>=2.3.3", # Data manipulation and analysis library
     "opencv-python>=4.12.0.88", # OpenCV for image processing
     "matplotlib>=3.10.6", # Plotting library
+    "seaborn>=0.13.2",
     "scikit-learn>=1.7.2", # Machine learning library
-    "tqdm>=4.67.1" ,      # Progress bar library
+    "tqdm>=4.67.1", # Progress bar library
 ]
 
 

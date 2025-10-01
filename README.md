@@ -10,8 +10,15 @@
 
 ## 📖 Overview
 
-**ClashVision** is the core machine learning engine powering the DataLint ecosystem. This repository contains advanced
-ML models and algorithms designed to automatically detect, analyze, and report data quality issues inside datasets.
+**ClashVision** is a computer vision project that leverages advanced deep learning techniques to provide
+state-of-the-art object detection like gold storage and elixir storage detection in Clash of Clans game.
+Built with PyTorch, ClashVision is designed to be modular, scalable, and easy to use for both research and production
+environments.
+
+## ✨ Features
+
+- **Object Detection**: Detects and classifies various objects within images.
+- **Pre-trained Models**: Comes with pre-trained models for quick deployment.
 
 ## 🔧 Pre-requisites
 

@@ -1,6 +1,5 @@
-# dataset.yaml
 train: ../data/images/train
 val: ../data/images/val
 
 nc: 2  # number of classes
-names: [ 'gold_storage', 'elixir_storage' ]  # class names
+names: [ 'elixir_storage', 'gold_storage' ]  # class IDs: 0=elixir, 1=gold

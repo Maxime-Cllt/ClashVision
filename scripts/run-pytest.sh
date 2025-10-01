@@ -7,4 +7,4 @@ set -e
 
 # Run pytest
 echo "Running pytest"
-uv run pytest tests/
+uv run pytest
