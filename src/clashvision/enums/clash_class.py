@@ -24,6 +24,11 @@ class ClashClass(Enum):
         return color_map.get(self, "black")  # Default to black if not found
 
     @staticmethod
+    def to_list() -> list[str]:
+        """Get all class names as a list of strings."""
+        return [cls.name for cls in ClashClass]
+
+    @staticmethod
     def get_palette() -> list[str]:
         """Get all colors in the palette."""
         return [cls.to_color for cls in ClashClass]
