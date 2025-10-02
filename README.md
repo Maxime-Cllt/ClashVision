@@ -8,6 +8,11 @@
   <img src="https://img.shields.io/badge/Version-1.0.0-success?style=for-the-badge" alt="Version" />
 </div>
 
+
+<div align="center">
+  <img src="assets/val_batch0_labels.png" width="400px" alt="ClashVision"/>
+</div>
+
 ## 📖 Overview
 
 **ClashVision** is a computer vision project that leverages advanced deep learning techniques to provide
@@ -16,34 +21,6 @@ Built with PyTorch, ClashVision is designed to be modular, scalable, and easy to
 environments.
 
 ## ✨ Features
-
-- **Object Detection**: Detects and classifies various objects within images.
-- **Pre-trained Models**: Comes with pre-trained models for quick deployment.
-
-## 📊 Model Summary
-
-<div align="center">
-
-<table>
-  <thead>
-    <tr>
-      <th style="padding:8px 16px;">Layer</th>
-      <th style="padding:8px 16px;">Parameters</th>
-      <th style="padding:8px 16px;">Gradients</th>
-      <th style="padding:8px 16px;">GFLOPs</th>
-    </tr>
-  </thead>
-  <tbody align="center">
-    <tr>
-      <td>129</td>
-      <td>3,011,238</td>
-      <td>3,011,222</td>
-      <td>8.2</td>
-    </tr>
-  </tbody>
-</table>
-
-</div>
 
 ## 🔧 Pre-requisites
 
@@ -90,6 +67,40 @@ Code formatting is done using `black`. To format the code, run:
 ```bash
 ./scripts/run-black.sh
 ```
+
+## 📊 Model Summary
+
+### Model Architecture
+
+72 layers, 3,006,038 parameters, 0 gradients, 8.1 GFLOPs
+
+<div align="center">
+    <table>
+      <thead>
+        <tr>
+          <th style="padding:8px 16px;">Layer</th>
+          <th style="padding:8px 16px;">Parameters</th>
+          <th style="padding:8px 16px;">Gradients</th>
+          <th style="padding:8px 16px;">GFLOPs</th>
+        </tr>
+      </thead>
+      <tbody align="center">
+        <tr>
+          <td>72</td>
+            <td>3,006,038</td>
+            <td>0</td>
+            <td>8.1</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+
+### Training and Validation Curves
+
+<div align="center">
+  <img src="assets/results.png" width="500px" alt="Training and Validation Curves"/>
+  <img src="assets/val_batch0_pred.png" width="500px" alt="Training and Validation Curves"/>
+</div>
 
 ## 🤝 Contributing
 
