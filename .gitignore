@@ -3,3 +3,5 @@
 /data/
 .venv
 .env
+runs
+inference_results

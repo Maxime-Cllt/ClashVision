@@ -8,21 +8,29 @@ def check_dataset_structure(image_dir: str, label_dir: str) -> None:
     :param label_dir:  Directory containing label files.
     :return: None
     """
-    image_files = {os.path.splitext(f)[0] for f in os.listdir(image_dir) if f.endswith(('.jpg', '.png', '.jpeg'))}
-    label_files = {os.path.splitext(f)[0] for f in os.listdir(label_dir) if f.endswith('.txt')}
+    image_files = {
+        os.path.splitext(f)[0]
+        for f in os.listdir(image_dir)
+        if f.endswith((".jpg", ".png", ".jpeg"))
+    }
+    label_files = {
+        os.path.splitext(f)[0] for f in os.listdir(label_dir) if f.endswith(".txt")
+    }
 
     missing_labels = image_files - label_files
     missing_images = label_files - image_files
 
     if not missing_labels and not missing_images:
-        print("Dataset structure is valid. All images have corresponding labels and vice versa in directory:",
-              image_dir)
+        print(
+            "Dataset structure is valid. All images have corresponding labels and vice versa in directory:",
+            image_dir,
+        )
     else:
         print("Missing labels:", missing_labels)
         print("Missing images:", missing_images)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import os
 
     images_path_train = os.path.join(get_images_path(), "train")
