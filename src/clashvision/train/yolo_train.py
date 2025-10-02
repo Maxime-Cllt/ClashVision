@@ -4,6 +4,8 @@ import torch
 
 from clashvision.core.path import get_project_root
 
+# run with uv run python src/clashvision/train/yolo_train.py
+
 if __name__ == '__main__':
     from ultralytics import YOLO
 
