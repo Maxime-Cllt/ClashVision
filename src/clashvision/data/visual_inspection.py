@@ -25,7 +25,7 @@ def visualize_sample(image_dir: str, label_dir: str, class_names: list[str]) -> 
             cv2.putText(img, class_names[cls], (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
     cv2.imshow("Sample", img)
-    cv2.waitKey(0) # Press any key to close the window
+    cv2.waitKey(0)  # Press any key to close the window
     cv2.destroyAllWindows()
 
 
@@ -33,9 +33,4 @@ if __name__ == '__main__':
     images_path_train = os.path.join(get_images_path(), "train")
     labels_path_train = os.path.join(get_labels_path(), "train")
 
-    images_path_val = os.path.join(get_images_path(), "val")
-    labels_path_val = os.path.join(get_labels_path(), "val")
-
     visualize_sample(images_path_train, labels_path_train, ClashClass.to_list())
-
-    visualize_sample(images_path_val, labels_path_val, ClashClass.to_list())

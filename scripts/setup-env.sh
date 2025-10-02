@@ -11,6 +11,9 @@ PYTHON_VERSION="3.13"
 echo "Setting up virtual environment with Python $PYTHON_VERSION"
 uv venv --python $PYTHON_VERSION
 
+echo "Activating virtual environment"
+source .venv/bin/activate
+
 # Install dependencies from pyproject.toml
 echo "Installing dependencies"
 uv sync

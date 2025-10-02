@@ -1,13 +1,12 @@
 [project]
 name = "clashvision"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.2.0"
+description = "A computer vision model for Clash of Clans gold and elixir classification."
 readme = "README.md"
 authors = [
     { name = "Maxime-Cllt" }
 ]
 requires-python = ">=3.13"
-packages = [{ include = "clashvision", from = "src" }]
 dependencies = [
     "ultralytics>=8.3.204", # YOLOv8 for object detection
     "torch>=2.8.0", # PyTorch for deep learning
@@ -21,7 +20,6 @@ dependencies = [
     "tqdm>=4.67.1", # Progress bar library
 ]
 
-
 [tool.uv]
 dev-dependencies = [
     "pytest>=8.4.1",
@@ -29,10 +27,17 @@ dev-dependencies = [
     "ruff>=0.12.11"
 ]
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 # Configuration for Hatch build system
+[tool.hatch.build.targets.wheel]
+packages = ["src/clashvision"]
+
 [tool.hatch.build]
 include = [
-    "datalint_ml/**.py",
+    "src/clashvision/**/*.py",
     "README.md",
     "LICENSE",
 ]
@@ -49,9 +54,3 @@ exclude = [
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-
