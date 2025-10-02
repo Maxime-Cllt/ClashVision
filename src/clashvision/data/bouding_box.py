@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 
 from clashvision.core.path import get_labels_path
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
-    label_dir: str = os.path.join(get_labels_path(), 'train')
+    label_dir: str = os.path.join(get_labels_path(), "train")
 
     img_w, img_h = 640, 640  # or actual sizes if varied
     box_widths, box_heights = [], []

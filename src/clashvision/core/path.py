@@ -20,6 +20,7 @@ def get_data_path() -> Path:
     :return:  Path object pointing to the data directory.
     """
     import os
+
     return Path(os.path.join(get_project_root(), "data"))
 
 

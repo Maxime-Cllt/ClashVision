@@ -6,7 +6,9 @@ from clashvision.core.path import get_data_path
 from clashvision.enums.clash_class import ClashClass
 
 
-def generate_dataset_yaml(dataset_path: str, class_names: list[str], output_path: str = "dataset.yaml"):
+def generate_dataset_yaml(
+    dataset_path: str, class_names: list[str], output_path: str = "dataset.yaml"
+):
     """
     Generate a YOLO dataset.yaml file.
 
@@ -19,7 +21,7 @@ def generate_dataset_yaml(dataset_path: str, class_names: list[str], output_path
         "train": os.path.join(dataset_path, "images/train"),
         "val": os.path.join(dataset_path, "images/val"),
         "nc": len(class_names),
-        "names": class_names
+        "names": class_names,
     }
 
     # Save as YAML

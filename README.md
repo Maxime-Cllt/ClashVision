@@ -20,6 +20,31 @@ environments.
 - **Object Detection**: Detects and classifies various objects within images.
 - **Pre-trained Models**: Comes with pre-trained models for quick deployment.
 
+## 📊 Model Summary
+
+<div align="center">
+
+<table>
+  <thead>
+    <tr>
+      <th style="padding:8px 16px;">Layer</th>
+      <th style="padding:8px 16px;">Parameters</th>
+      <th style="padding:8px 16px;">Gradients</th>
+      <th style="padding:8px 16px;">GFLOPs</th>
+    </tr>
+  </thead>
+  <tbody align="center">
+    <tr>
+      <td>129</td>
+      <td>3,011,238</td>
+      <td>3,011,222</td>
+      <td>8.2</td>
+    </tr>
+  </tbody>
+</table>
+
+</div>
+
 ## 🔧 Pre-requisites
 
 - **Python 3.13+**

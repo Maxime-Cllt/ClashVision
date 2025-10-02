@@ -3,11 +3,12 @@ from enum import Enum
 
 class ClashClass(Enum):
     """Enum representing different Clash of Clans building classes."""
+
     ELIXIR_STORAGE = 0  # Replace with your actual class name
     GOLD_STORAGE = 1  # Replace with your actual class name
 
     @staticmethod
-    def from_int(value: int) -> 'ClashClass':
+    def from_int(value: int) -> "ClashClass":
         """Convert an integer to a ClashClass enum member."""
         for cls in ClashClass:
             if cls.value == value:
