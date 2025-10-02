@@ -3,8 +3,6 @@ import os.path
 
 from clashvision.core.path import get_project_root
 
-# run with uv run python src/clashvision/train/yolo_train.py
-
 
 def train_yolo_model():
     from ultralytics import YOLO
@@ -13,7 +11,7 @@ def train_yolo_model():
     model = YOLO("yolov8n.pt")
 
     # Train the model
-    results = model.train(
+    model.train(
         data=os.path.join(get_project_root(), "config", "dataset.yaml"),
         epochs=100,
         imgsz=640,
@@ -32,4 +30,6 @@ def train_yolo_model():
 
 
 if __name__ == "__main__":
+    # run with uv run python src/clashvision/train/yolo_train.py
+
     train_yolo_model()

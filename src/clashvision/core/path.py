@@ -38,3 +38,11 @@ def get_labels_path() -> Path:
     :return:  Path object pointing to the labels directory.
     """
     return get_data_path() / "labels"
+
+
+def get_models_path() -> Path:
+    """
+    Get the path to the models directory within the data directory.
+    :return:  Path object pointing to the models directory.
+    """
+    return get_project_root() / "models"

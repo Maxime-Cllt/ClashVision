@@ -36,6 +36,20 @@ class TestPath(unittest.TestCase):
         self.assertIsInstance(images_path, Path)
         self.assertTrue(Path(images_path).exists())
 
+    def test_get_labels_path(self):
+        from clashvision.core.path import get_labels_path
+
+        labels_path = get_labels_path()
+        self.assertIsInstance(labels_path, Path)
+        self.assertTrue(Path(labels_path).exists())
+
+    def test_get_models_path(self):
+        from clashvision.core.path import get_models_path
+
+        models_path = get_models_path()
+        self.assertIsInstance(models_path, Path)
+        self.assertTrue(Path(models_path).exists())
+
 
 if __name__ == "__main__":
     unittest.main()
