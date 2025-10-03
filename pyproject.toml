@@ -18,6 +18,7 @@ dependencies = [
     "seaborn>=0.13.2",
     "scikit-learn>=1.7.2", # Machine learning library
     "tqdm>=4.67.1", # Progress bar library
+    "onnx>=1.19.0" # Open Neural Network Exchange format
 ]
 
 [tool.uv]

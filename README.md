@@ -10,7 +10,7 @@
 
 
 <div align="center">
-  <img src="assets/val_batch0_labels.png" width="400px" alt="ClashVision"/>
+  <img src="assets/val_batch0_labels.png" width="500px" alt="ClashVision"/>
 </div>
 
 ## 📖 Overview
