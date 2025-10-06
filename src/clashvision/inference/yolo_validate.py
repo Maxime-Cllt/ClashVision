@@ -19,13 +19,15 @@ def load_model(model_path: str) -> YOLO:
 
 def hex_to_bgr(hex_color: str) -> tuple[int, int, int]:
     """Convert hex color to BGR tuple for OpenCV"""
-    hex_color = hex_color.lstrip('#')
-    rgb = tuple(int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
+    hex_color = hex_color.lstrip("#")
+    rgb = tuple(int(hex_color[i : i + 2], 16) for i in (0, 2, 4))
     # Convert RGB to BGR for OpenCV
     return (rgb[2], rgb[1], rgb[0])
 
 
-def draw_custom_annotations(image: np.ndarray, results, conf_threshold: float = 0.5) -> np.ndarray:
+def draw_custom_annotations(
+    image: np.ndarray, results, conf_threshold: float = 0.5
+) -> np.ndarray:
     """Draw custom annotations using ClashClass colors"""
     annotated_image = image.copy()
 
@@ -66,7 +68,7 @@ def draw_custom_annotations(image: np.ndarray, results, conf_threshold: float = 
                 (x1, y1 - text_height - baseline - 10),
                 (x1 + text_width, y1),
                 color_bgr,
-                -1
+                -1,
             )
 
             # Draw text
@@ -77,7 +79,7 @@ def draw_custom_annotations(image: np.ndarray, results, conf_threshold: float = 
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.6,
                 (255, 255, 255),  # White text
-                2
+                2,
             )
 
     return annotated_image
@@ -88,9 +90,11 @@ def run_inference_on_image(model: YOLO, image_path: str, conf_threshold: float =
     return model(image_path, conf=conf_threshold)
 
 
-def run_inference_on_directory(model: YOLO, image_dir: str, output_dir: str, conf_threshold: float = 0.5) -> list[dict]:
+def run_inference_on_directory(
+    model: YOLO, image_dir: str, output_dir: str, conf_threshold: float = 0.5
+) -> list[dict]:
     """Run inference on all images in a directory"""
-    image_extensions = {'.jpg', '.jpeg', '.png'}
+    image_extensions = {".jpg", ".jpeg", ".png"}
     image_dir = Path(image_dir)
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -111,7 +115,9 @@ def run_inference_on_directory(model: YOLO, image_dir: str, output_dir: str, con
             results = model(str(image_path), conf=conf_threshold)
 
             # Draw custom annotations with ClashClass colors
-            annotated_image = draw_custom_annotations(original_image, results, conf_threshold)
+            annotated_image = draw_custom_annotations(
+                original_image, results, conf_threshold
+            )
 
             # Save annotated image
             output_path = output_dir / f"annotated_{image_path.name}"
@@ -128,18 +134,22 @@ def run_inference_on_directory(model: YOLO, image_dir: str, output_dir: str, con
                     except ValueError:
                         class_name = f"Unknown_{class_id}"
 
-                    detections.append({
-                        'class_id': class_id,
-                        'class_name': class_name,
-                        'confidence': float(box.conf[0]),
-                        'bbox': box.xyxy[0].tolist()
-                    })
+                    detections.append(
+                        {
+                            "class_id": class_id,
+                            "class_name": class_name,
+                            "confidence": float(box.conf[0]),
+                            "bbox": box.xyxy[0].tolist(),
+                        }
+                    )
 
-            results_summary.append({
-                'image': image_path.name,
-                'detections': detections,
-                'num_detections': len(detections)
-            })
+            results_summary.append(
+                {
+                    "image": image_path.name,
+                    "detections": detections,
+                    "num_detections": len(detections),
+                }
+            )
 
     return results_summary
 
@@ -150,8 +160,8 @@ def validate_model(model, val_data_path):
     return results
 
 
-if __name__ == '__main__':
-    model_path = os.path.join(get_models_path(), 'v1', 'best.pt')
+if __name__ == "__main__":
+    model_path = os.path.join(get_models_path(), "v1", "best.pt")
 
     try:
         # Load the trained model
@@ -160,36 +170,35 @@ if __name__ == '__main__':
 
         # Run validation on your dataset
         print("\nRunning validation...")
-        dataset_config = os.path.join(get_project_root(), 'config', 'dataset.yaml')
+        dataset_config = os.path.join(get_project_root(), "config", "dataset.yaml")
         val_results = validate_model(model, dataset_config)
         print(f"Validation mAP50: {val_results.box.map50}")
         print(f"Validation mAP50-95: {val_results.box.map}")
 
         # Test on validation images
         print("\nRunning inference on validation images...")
-        val_images_dir = os.path.join(get_images_path(), 'val')
-        output_dir = os.path.join(get_project_root(), 'inference_results')
+        val_images_dir = os.path.join(get_images_path(), "val")
+        output_dir = os.path.join(get_project_root(), "inference_results")
 
         if os.path.exists(val_images_dir):
             results_summary = run_inference_on_directory(
-                model,
-                val_images_dir,
-                output_dir,
-                conf_threshold=0.5
+                model, val_images_dir, output_dir, conf_threshold=0.5
             )
 
             # Print summary
             print(f"\nInference completed! Results saved to: {output_dir}")
             print(f"Processed {len(results_summary)} images")
 
-            total_detections = sum(r['num_detections'] for r in results_summary)
+            total_detections = sum(r["num_detections"] for r in results_summary)
             print(f"Total detections: {total_detections}")
 
             # Print per-image summary with class names
             for result in results_summary:
                 print(f"\n{result['image']}: {result['num_detections']} detections")
-                for detection in result['detections']:
-                    print(f"  - {detection['class_name']}: {detection['confidence']:.2f}")
+                for detection in result["detections"]:
+                    print(
+                        f"  - {detection['class_name']}: {detection['confidence']:.2f}"
+                    )
         else:
             print(f"Validation images directory not found: {val_images_dir}")
             print("Please add some images to test inference")
