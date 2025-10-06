@@ -10,7 +10,7 @@
 
 
 <div align="center">
-  <img src="assets/val_batch0_labels.png" width="400px" alt="ClashVision"/>
+  <img src="assets/val_batch0_labels.png" width="500px" alt="ClashVision"/>
 </div>
 
 ## 📖 Overview
@@ -99,6 +99,11 @@ Code formatting is done using `black`. To format the code, run:
 
 <div align="center">
   <img src="assets/results.png" width="500px" alt="Training and Validation Curves"/>
+</div>
+
+### Inference Example
+
+<div align="center">
   <img src="assets/val_batch0_pred.png" width="500px" alt="Training and Validation Curves"/>
 </div>
 

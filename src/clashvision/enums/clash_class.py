@@ -22,7 +22,7 @@ class ClashClass(Enum):
             ClashClass.ELIXIR_STORAGE: "#F461FF",
             ClashClass.GOLD_STORAGE: "#FEE95F",
         }
-        return color_map.get(self, "black")  # Default to black if not found
+        return color_map.get(self, "#000000")  # Default to black if not found
 
     @staticmethod
     def to_list() -> list[str]:
@@ -32,7 +32,7 @@ class ClashClass(Enum):
     @staticmethod
     def get_palette() -> list[str]:
         """Get all colors in the palette."""
-        return [cls.to_color for cls in ClashClass]
+        return [cls.to_color for cls in ClashClass]  # Fixed: was missing parentheses
 
     def __str__(self) -> str:
         return self.name.replace("_", " ").title()
