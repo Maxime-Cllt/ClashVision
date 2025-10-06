@@ -2,7 +2,7 @@ import os
 
 import torch
 import torchvision.transforms as transforms
-from PIL import Image
+from PIL import Image, ImageDraw
 from ultralytics import YOLO
 
 from clashvision.core.path import get_images_path, get_models_path
@@ -41,7 +41,7 @@ def load_yolo_model(model_path):
 
 def run_inference_ultralytics(model, image_path, class_names=None):
     """
-    Run inference using ultralytics YOLO model
+    Run inference using ultralytics YOLO model - returns ALL detections
     """
     results = model(image_path)
 
@@ -54,28 +54,51 @@ def run_inference_ultralytics(model, image_path, class_names=None):
             'confidence': 0.0,
             'predicted_class_name': "No detection",
             'all_detections': 0,
-            'boxes': []
+            'boxes': [],
+            'detections': []  # New: empty list for no detections
         }
 
-    # Get the detection with highest confidence
+    # Get ALL detections with their information
     confidences = result.boxes.conf.cpu().numpy()
     classes = result.boxes.cls.cpu().numpy()
-    max_conf_idx = confidences.argmax()
-    predicted_class = int(classes[max_conf_idx])
-    confidence_score = float(confidences[max_conf_idx])
+    boxes = result.boxes.xyxy.cpu().numpy()
+
+    # Create list of all detections
+    detections = []
+    for i in range(len(result.boxes)):
+        class_idx = int(classes[i])
+        confidence = float(confidences[i])
+        box = boxes[i]
+
+        detection = {
+            'class_idx': class_idx,
+            'confidence': confidence,
+            'class_name': class_names[class_idx] if class_names else f"Class_{class_idx}",
+            'box': box,
+            'clash_class': ClashClass.from_int(class_idx) if class_idx < len(ClashClass) else None
+        }
+        detections.append(detection)
+
+    # Sort detections by confidence (highest first)
+    detections.sort(key=lambda x: x['confidence'], reverse=True)
+
+    # Get the detection with highest confidence for backward compatibility
+    best_detection = detections[0]
 
     return {
-        'predicted_class_idx': predicted_class,
-        'confidence': confidence_score,
-        'predicted_class_name': class_names[predicted_class] if class_names else f"Class_{predicted_class}",
+        'predicted_class_idx': best_detection['class_idx'],
+        'confidence': best_detection['confidence'],
+        'predicted_class_name': best_detection['class_name'],
         'all_detections': len(result.boxes),
-        'boxes': result.boxes.xyxy.cpu().numpy() if len(result.boxes) > 0 else []
+        'boxes': boxes,
+        'detections': detections  # New: all detections with full info
     }
 
 
 def run_inference_pytorch(model, image_path, class_names=None):
     """
     Run inference using PyTorch model (classification style)
+    Note: This is for classification, not detection, so only one result
     """
     device = next(model.parameters()).device
 
@@ -100,10 +123,20 @@ def run_inference_pytorch(model, image_path, class_names=None):
         predicted_class = predicted.item()
         confidence_score = confidence.item()
 
+    # For classification, create a single detection
+    detection = {
+        'class_idx': predicted_class,
+        'confidence': confidence_score,
+        'class_name': class_names[predicted_class] if class_names else f"Class_{predicted_class}",
+        'box': None,  # No bounding box for classification
+        'clash_class': ClashClass.from_int(predicted_class) if predicted_class < len(ClashClass) else None
+    }
+
     return {
         'predicted_class_idx': predicted_class,
         'confidence': confidence_score,
-        'predicted_class_name': class_names[predicted_class] if class_names else f"Class_{predicted_class}"
+        'predicted_class_name': class_names[predicted_class] if class_names else f"Class_{predicted_class}",
+        'detections': [detection]  # Single detection for classification
     }
 
 
@@ -117,7 +150,7 @@ def run_inference_on_image(model_path, image_path, class_names=None):
         class_names: List of class names (optional)
 
     Returns:
-        Prediction results
+        Prediction results with ALL detections
     """
     # Validate inputs
     if not os.path.exists(model_path):
@@ -183,6 +216,10 @@ def run_batch_inference(model_path: str, image_directory: str, class_names: list
             results.append(result)
 
             print(f"  -> {result['predicted_class_name']} (confidence: {result['confidence']:.4f})")
+            if 'detections' in result:
+                print(f"  -> Total detections: {len(result['detections'])}")
+                for detection in result['detections'][:3]:  # Show first 3 detections
+                    print(f"     - {detection['class_name']}: {detection['confidence']:.4f}")
 
         except Exception as e:
             print(f"  -> Error processing {image_file}: {e}")
@@ -195,12 +232,60 @@ def run_batch_inference(model_path: str, image_directory: str, class_names: list
     return results
 
 
+def draw_detections_on_image(image_path, detections, save_path=None, show_image=True):
+    """
+    Draw all detections on image with class-specific colors
+
+    Args:
+        image_path: Path to the original image
+        detections: List of detection dictionaries
+        save_path: Optional path to save the annotated image
+        show_image: Whether to display the image
+    """
+    img = Image.open(image_path).convert('RGB')
+    draw = ImageDraw.Draw(img)
+
+    for detection in detections:
+        if detection.get('box') is None:  # Skip if no bounding box (classification)
+            continue
+
+        x1, y1, x2, y2 = detection['box']
+        clash_class = detection.get('clash_class')
+
+        # Get color for the class
+        if clash_class and hasattr(clash_class, 'to_color'):
+            color = clash_class.to_color
+        else:
+            color = "red"  # Default color
+
+        # Draw bounding box
+        draw.rectangle([x1, y1, x2, y2], outline=color, width=3)
+
+        # Draw label with confidence
+        label = f"{detection['class_name']}: {detection['confidence']:.2f}"
+
+        # Draw label background
+        bbox = draw.textbbox((x1, y1 - 20), label)
+        draw.rectangle(bbox, fill=color)
+        draw.text((x1, y1 - 20), label, fill="white")
+
+    if save_path:
+        img.save(save_path)
+        print(f"Annotated image saved to: {save_path}")
+
+    if show_image:
+        img.show()
+
+    return img
+
+
 if __name__ == "__main__":
 
     # Get class names
     class_names = ClashClass.to_list()
-    image = os.path.join(get_images_path(), 'val', 'village_1759335821.png')
+    image = os.path.join(get_images_path(), 'val', 'village_1759583271.png')
     model = os.path.join(get_models_path(), 'v1', 'best.pt')
+    img_save_path = os.path.join(get_images_path(), 'inference_results', f"annotated_{os.path.basename(image)}")
 
     # Single image inference
     result = run_inference_on_image(
@@ -209,32 +294,21 @@ if __name__ == "__main__":
         class_names=class_names
     )
 
-    # Print all detections
-    print(f"Predicted class: {result['predicted_class_name']} (confidence: {result['confidence']:.4f})")
-    print(f"All detections: {result['all_detections']}")
-    print(f"Boxes: {result['boxes']}")
+    # Print results for ALL detections
+    print(f"Best prediction: {result['predicted_class_name']} (confidence: {result['confidence']:.4f})")
+    print(f"Total detections: {result.get('all_detections', 0)}")
 
-    # Draw boxes on image
-    if result['all_detections'] > 0:
-        from PIL import ImageDraw
+    if 'detections' in result and result['detections']:
+        print("\nAll detections:")
+        for i, detection in enumerate(result['detections']):
+            print(f"  {i + 1}. {detection['class_name']} - Confidence: {detection['confidence']:.4f}")
 
-        img = Image.open(image).convert('RGB')
-        draw = ImageDraw.Draw(img)
-
-        for box in result['boxes']:
-            x1, y1, x2, y2 = box
-            color: str = None
-            class_type = ClashClass.from_int(result['predicted_class_idx'])
-
-            # match case
-            match class_type:
-                case ClashClass.ELIXIR_STORAGE:
-                    color = class_type.to_color
-                case ClashClass.GOLD_STORAGE:
-                    color = class_type.to_color
-                case _:
-                    color = "black"
-
-            draw.rectangle([x1, y1, x2, y2], outline=color, width=2)
-
-        img.show()
+        # Draw ALL detections on image with class-specific colors
+        annotated_image = draw_detections_on_image(
+            image_path=image,
+            detections=result['detections'],
+            save_path=img_save_path,
+            show_image=True
+        )
+    else:
+        print("No detections found.")
