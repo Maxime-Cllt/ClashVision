@@ -35,7 +35,7 @@ def train_yolo_model():
         name="yolov8n-clashvision",
     )
 
-    export_formats: list[str] = ["onnx", "torchscript", "tflite"]
+    export_formats: list[str] = ["onnx", "torchscript"]
 
     for fmt in export_formats:
         try:
