@@ -3,7 +3,7 @@ import time
 
 import torch
 import torchvision.transforms as transforms
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 from ultralytics import YOLO
 
 from clashvision.core.path import get_images_path, get_models_path, get_project_root
@@ -257,51 +257,69 @@ def run_batch_inference(
     return results
 
 
+from PIL import Image, ImageDraw, ImageFont
+
+from PIL import Image, ImageDraw, ImageFont
+
 def draw_detections_on_image(image_path, detections, save_path=None, show_image=True):
     """
-    Draw all detections on image with class-specific colors
-
-    Args:
-        image_path: Path to the original image
-        detections: List of detection dictionaries
-        save_path: Optional path to save the annotated image
-        show_image: Whether to display the image
+    Draw all detections on image with large, high-quality text labels.
     """
     img = Image.open(image_path).convert("RGB")
-    draw = ImageDraw.Draw(img)
+    draw = ImageDraw.Draw(img, "RGBA")
+
+    # Try using a TrueType font for smooth text rendering
+    try:
+        # Larger font size scaling with image width
+        font_size = max(22, img.width // 30)
+        font = ImageFont.truetype("arial.ttf", size=font_size)
+    except IOError:
+        # Fallback if Arial not found
+        font = ImageFont.load_default()
 
     for detection in detections:
-        if detection.get("box") is None:  # Skip if no bounding box (classification)
+        if detection.get("box") is None:
             continue
 
         x1, y1, x2, y2 = detection["box"]
-        clash_class = detection.get("clash_class")
+        class_name = detection.get("class_name", "Unknown")
+        confidence = detection.get("confidence", 0.0)
 
-        # Get color for the class
-        if clash_class and hasattr(clash_class, "to_color"):
-            color = clash_class.to_hex
-        else:
-            color = "red"  # Default color
+        # Get color (supports class color objects or default red)
+        clash_class = detection.get("clash_class")
+        color = clash_class.to_hex if (clash_class and hasattr(clash_class, "to_hex")) else "#FF0000"
 
         # Draw bounding box
-        draw.rectangle([x1, y1, x2, y2], outline=color, width=3)
+        draw.rectangle([x1, y1, x2, y2], outline=color, width=5)
 
-        # Draw label with confidence
-        label = f"{detection['class_name']}: {detection['confidence']:.2f}"
+        # Create label
+        label = f"{class_name}: {confidence:.2f}"
 
-        # Draw label background
-        bbox = draw.textbbox((x1, y1 - 20), label)
-        draw.rectangle(bbox, fill=color)
-        draw.text((x1, y1 - 20), label, fill="white")
+        # Measure text and add background
+        text_bbox = draw.textbbox((x1, y1), label, font=font)
+        text_w, text_h = text_bbox[2] - text_bbox[0], text_bbox[3] - text_bbox[1]
+
+        # Position background just above box if space allows
+        text_y = max(0, y1 - text_h - 10)
+
+        # Draw semi-transparent background for text
+        draw.rectangle(
+            [x1, text_y, x1 + text_w + 12, text_y + text_h + 6],
+            fill=(0, 0, 0, 180)
+        )
+
+        # Draw white text
+        draw.text((x1 + 6, text_y + 3), label, fill="white", font=font)
 
     if save_path:
-        img.save(save_path)
+        img.save(save_path, quality=95)
         print(f"Annotated image saved to: {save_path}")
 
     if show_image:
         img.show()
 
     return img
+
 
 
 if __name__ == "__main__":
