@@ -1,11 +1,12 @@
 import os
+import time
 
 import torch
 import torchvision.transforms as transforms
 from PIL import Image, ImageDraw
 from ultralytics import YOLO
 
-from clashvision.core.path import get_images_path, get_models_path
+from clashvision.core.path import get_images_path, get_models_path, get_project_root
 from clashvision.enums.clash_class import ClashClass
 
 
@@ -191,7 +192,7 @@ def run_inference_on_image(model_path, image_path, class_names=None):
 
 
 def run_batch_inference(
-    model_path: str, image_directory: str, class_names: list[str] = None
+        model_path: str, image_directory: str, class_names: list[str] = None
 ):
     """
     Run inference on multiple images in a directory
@@ -306,11 +307,12 @@ def draw_detections_on_image(image_path, detections, save_path=None, show_image=
 if __name__ == "__main__":
 
     # Get class names
+    start_time = time.time()
     class_names = ClashClass.to_list()
     image = os.path.join(get_images_path(), "val", "village_1759583271.png")
     model = os.path.join(get_models_path(), "v1", "best.pt")
     img_save_path = os.path.join(
-        get_images_path(), "inference_results", f"annotated_{os.path.basename(image)}"
+        get_project_root(), "inference_results", f"annotated_{os.path.basename(image)}"
     )
 
     # Single image inference
@@ -324,19 +326,21 @@ if __name__ == "__main__":
     )
     print(f"Total detections: {result.get('all_detections', 0)}")
 
-    if "detections" in result and result["detections"]:
-        print("\nAll detections:")
-        for i, detection in enumerate(result["detections"]):
-            print(
-                f"  {i + 1}. {detection['class_name']} - Confidence: {detection['confidence']:.4f}"
-            )
-
-        # Draw ALL detections on image with class-specific colors
-        annotated_image = draw_detections_on_image(
-            image_path=image,
-            detections=result["detections"],
-            save_path=img_save_path,
-            show_image=True,
-        )
-    else:
+    if "detections" not in result and result["detections"]:
         print("No detections found.")
+
+    print("\nAll detections:")
+    for i, detection in enumerate(result["detections"]):
+        print(
+            f"  {i + 1}. {detection['class_name']} - Confidence: {detection['confidence']:.4f}"
+        )
+
+    # Draw ALL detections on image with class-specific colors
+    annotated_image = draw_detections_on_image(
+        image_path=image,
+        detections=result["detections"],
+        save_path=img_save_path,
+        show_image=True,
+    )
+
+    print(f"Inference completed in {time.time() - start_time:.2f} seconds.")
