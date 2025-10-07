@@ -43,7 +43,7 @@ def draw_custom_annotations(
             try:
                 # Get the ClashClass enum and its color
                 clash_class = ClashClass.from_int(class_id)
-                color_hex = clash_class.to_color
+                color_hex = clash_class.to_hex
                 color_bgr = hex_to_bgr(color_hex)
                 class_name = str(clash_class)
             except ValueError:

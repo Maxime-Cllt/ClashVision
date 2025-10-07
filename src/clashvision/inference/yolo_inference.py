@@ -279,7 +279,7 @@ def draw_detections_on_image(image_path, detections, save_path=None, show_image=
 
         # Get color for the class
         if clash_class and hasattr(clash_class, "to_color"):
-            color = clash_class.to_color
+            color = clash_class.to_hex
         else:
             color = "red"  # Default color
 
