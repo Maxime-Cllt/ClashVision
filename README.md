@@ -4,8 +4,8 @@
 
 <div align="center">
   <img src="https://img.shields.io/badge/Python-3.13%2B-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python Version" />
-  <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch" />
-  <img src="https://img.shields.io/badge/Version-0.2.0-success?style=for-the-badge" alt="Version" />
+  <img src="https://img.shields.io/badge/YOLOv8-orange?style=for-the-badge" alt="YOLOv8 Version" />
+  <img src="https://img.shields.io/badge/Version-1.0.0-success?style=for-the-badge" alt="Version" />
 </div>
 
 
@@ -17,8 +17,8 @@
 
 **ClashVision** is a computer vision project that leverages advanced deep learning techniques to provide
 state-of-the-art object detection like gold storage and elixir storage detection in Clash of Clans game.
-Built with PyTorch, ClashVision is designed to be modular, scalable, and easy to use for both research and production
-environments.
+Built using YOLOv8 architecture, ClashVision is designed to be efficient and accurate, making it suitable for
+real-time applications.
 
 ## ✨ Features
 
@@ -100,6 +100,17 @@ Code formatting is done using `black`. To format the code, run:
 <div align="center">
   <img src="assets/results.png" width="500px" alt="Training and Validation Curves"/>
 </div>
+
+## 🔗 Related Projects
+
+- [ClashVisionRuntime](https://github.com/Maxime-Cllt/ClashVisionRuntime.git)
+
+## 🎯 Note
+
+- This project is for educational purposes only and is not affiliated with or endorsed by Supercell, the developer of
+  Clash of Clans.
+- The model works fine on any screenshot of the game, but may not perform well on images with extreme angles or
+  obstructions.
 
 ## 🤝 Contributing
 
