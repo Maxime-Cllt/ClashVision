@@ -17,8 +17,8 @@
 
 **ClashVision** is a computer vision project that leverages advanced deep learning techniques to provide
 state-of-the-art object detection like gold storage and elixir storage detection in Clash of Clans game.
-Built with PyTorch, ClashVision is designed to be modular, scalable, and easy to use for both research and production
-environments.
+Built using YOLOv8 architecture, ClashVision is designed to be efficient and accurate, making it suitable for
+real-time applications.
 
 ## ✨ Features
 
