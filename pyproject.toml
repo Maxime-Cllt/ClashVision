@@ -1,6 +1,6 @@
 [project]
 name = "clashvision"
-version = "0.2.0"
+version = "0.5.0"
 description = "A computer vision model for Clash of Clans gold and elixir classification."
 readme = "README.md"
 authors = [
@@ -8,7 +8,7 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "ultralytics>=8.3.204", # YOLOv8 for object detection
+    "ultralytics>=8.3.206", # YOLOv8 for object detection
     "torch>=2.8.0", # PyTorch for deep learning
     "numpy>=2.2.6", # Numerical computing library
     "pandas>=2.3.3", # Data manipulation and analysis library
@@ -20,7 +20,7 @@ dependencies = [
 dev-dependencies = [
     "pytest>=8.4.1",
     "black>=25.1.0",
-    "ruff>=0.12.11"
+    "ruff>=0.14.0"
 ]
 
 [build-system]

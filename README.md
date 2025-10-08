@@ -4,7 +4,7 @@
 
 <div align="center">
   <img src="https://img.shields.io/badge/Python-3.13%2B-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python Version" />
-  <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" alt="PyTorch" />
+  <img src="https://img.shields.io/badge/YOLOv8-orange?style=for-the-badge" alt="YOLOv8 Version" />
   <img src="https://img.shields.io/badge/Version-1.0.0-success?style=for-the-badge" alt="Version" />
 </div>
 
