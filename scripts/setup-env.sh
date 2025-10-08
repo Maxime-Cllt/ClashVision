@@ -20,6 +20,7 @@ echo "Locking dependencies"
 uv lock
 
 echo "Activating virtual environment"
+chmod +x .venv/bin/activate
 .venv/bin/activate
 
 echo "Development environment setup complete!"
