@@ -1,0 +1,66 @@
+name: Tests Integration
+
+on:
+  push:
+    branches: [ "master", "main" ]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.github/workflows/**'
+  pull_request:
+    branches: [ "master", "main" ]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ 3.13 ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Use uv to manage Python versions and virtual environments
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: "latest"
+          version-file: 'pyproject.toml'
+          activate-environment: true
+          enable-cache: true
+
+      - name: Verify uv version
+        run: uv --version
+
+        # Set up Python version using uv
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+
+      - name: Verify Python version
+        run: python --version
+
+      - name: Add right permissions for scripts
+        run: chmod +x ./scripts/*.sh
+
+      - name: Set up environment
+        run: ./scripts/setup-env.sh
+
+      - name: Run tests
+        run: ./scripts/run-pytest.sh
+
+      - name: Run lint with ruff
+        run: ./scripts/run-ruff.sh
+
+      - name: Run black with check
+        run: ./scripts/run-black.sh

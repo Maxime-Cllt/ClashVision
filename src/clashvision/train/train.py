@@ -13,6 +13,9 @@ def train_yolo_model():
     # Get the number of CPU cores for data loading
     cpu_count = os.cpu_count()
     workers = cpu_count if cpu_count is not None else 4
+    print(
+        f"Number of CPU cores: {cpu_count}, using {workers} workers for data loading."
+    )
 
     device = "cuda" if os.getenv("CUDA_VISIBLE_DEVICES") else "cpu"
     print(f"Using device: {device}")
@@ -32,7 +35,7 @@ def train_yolo_model():
         name="yolov8n-clashvision",
     )
 
-    export_formats: list[str] = ["onnx", "torchscript", "tflite"]
+    export_formats: list[str] = ["onnx", "torchscript"]
 
     for fmt in export_formats:
         try:
@@ -44,5 +47,4 @@ def train_yolo_model():
 
 if __name__ == "__main__":
     # run with uv run python src/clashvision/train/train.py
-
     train_yolo_model()
