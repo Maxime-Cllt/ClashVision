@@ -101,6 +101,17 @@ Code formatting is done using `black`. To format the code, run:
   <img src="assets/results.png" width="500px" alt="Training and Validation Curves"/>
 </div>
 
+## 🔗 Related Projects
+
+- [ClashVisionRuntime](https://github.com/Maxime-Cllt/ClashVisionRuntime.git)
+
+## 🎯 Note
+
+- This project is for educational purposes only and is not affiliated with or endorsed by Supercell, the developer of
+  Clash of Clans.
+- The model works fine on any screenshot of the game, but may not perform well on images with extreme angles or
+  obstructions.
+
 ## 🤝 Contributing
 
 We welcome contributions to enhance the capabilities of ClashVision.
